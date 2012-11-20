@@ -4,8 +4,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.LowerCaseTokenizer;
@@ -18,6 +16,7 @@ import org.apache.lucene.util.Version;
 public class MyAnalyzer extends Analyzer {
 
 	final HashSet<String> stopWords;
+	private Analyzer a;
 
 	public MyAnalyzer() {
 		String[] abc = { "when", "while", "who", "thi", "up", "have",
@@ -35,10 +34,10 @@ public class MyAnalyzer extends Analyzer {
 		return ts;
 	}
 	
-	public static void process(String summary) throws Exception {
+	public String process(String summary) throws Exception {
 		
 		Reader reader = new StringReader(summary);
-		Analyzer a = new MyAnalyzer();
+		a = new MyAnalyzer();
 
 		TokenStream ts = a.tokenStream(summary, reader);
 		boolean hasnext = ts.incrementToken();
@@ -49,9 +48,9 @@ public class MyAnalyzer extends Analyzer {
 			newSummary.append(ta.toString()+" ");
 			hasnext = ts.incrementToken();
 		}
-		
-		System.out.println(summary);
-		System.out.println(newSummary);
+		//System.out.println(summary);
+		//System.out.println(newSummary);
+		return newSummary.toString();
 
 	}
 }
