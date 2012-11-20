@@ -116,6 +116,23 @@ public class Season {
 	}
 	
 	/**
+	 * Get similitude between two episodes
+	 * @param e1
+	 * @param e2
+	 * @return
+	 */
+	protected double getSimilitude(Episode e1, Episode e2) {
+		return e1.getSimilitude(e2);
+	}
+	
+	
+	public void similitude(Episode e) {
+		System.out.println("Similitude with E" + e.getNumber() + " Ò" + e.getTitle() + "Ó:");
+		for (int index=0; index<data.size(); index++)
+			System.out.println((index+1) + ": " + e.getSimilitude(data.get(index)));
+	}
+	
+	/**
 	 * Nicer display of a season
 	 */
 	public String toString() {
