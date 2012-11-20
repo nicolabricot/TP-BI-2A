@@ -11,12 +11,12 @@ public class Test {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		
-		Season data = new Season("http://www.imdb.fr/title/tt0460649/episodes?season=1");
-		//Season data = new Season("http://www.imdb.fr/title/tt0364845/episodes?season=2");
+		//Season s = new Season("http://www.imdb.fr/title/tt0460649/episodes?season=1");
+		Season s = new Season("http://www.imdb.fr/title/tt0364845/episodes?season=2");
 		
-		//System.out.println(data);
+		//System.out.println(s);
 		
-		System.out.println(data.getEpisode(2).getSimilitude(data.getEpisode(1)));
+		s.similitude(s.getEpisode(2));
 		
 	}
 
