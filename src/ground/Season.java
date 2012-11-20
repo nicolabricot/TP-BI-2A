@@ -67,12 +67,20 @@ public class Season {
 			System.out.println(inputLine);
 	}
 	
+	/**
+	 * Get list of Episodes in this Season
+	 * @return ArrayList<Episode>
+	 */
 	public ArrayList<Episode> getEpisodes() {
 		return data;
-	}
-	
+	}	
+	/**
+	 * Get a specific Episode from a Season
+	 * @param index
+	 * @return Episode index
+	 */
 	public Episode getEpisode(int index) {
-		return data.get(index);
+		return data.get(index-1);
 	}
 
 }
