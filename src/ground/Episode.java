@@ -1,5 +1,10 @@
 package ground;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 import analyzer.MyAnalyzer;
 
 public class Episode {
@@ -9,7 +14,8 @@ public class Episode {
 	protected int number;
 	protected String resume;
 	protected String clearedResume = "";
-	MyAnalyzer analyzer = new MyAnalyzer();
+	protected MyAnalyzer analyzer = new MyAnalyzer();
+	protected HashMap<String, Integer> map = new HashMap<String, Integer>();
 	
 	/**
 	 * Constructor by copy
@@ -90,6 +96,7 @@ public class Episode {
 	public void setResume(String resume) throws Exception {
 		this.resume = resume;
 		this.clearedResume = this.analyzer.process(resume);
+		this.split();
 	}
 	
 	/**
@@ -100,17 +107,55 @@ public class Episode {
 		return this.clearedResume;
 	}
 
-	public void getSimilitude(Episode e) {
-		if (e.equals(this)) {
-			System.out.println("Similitude de 100%");
-		}
-		else {
-			
+	/**
+	 * Split into a HashMap<Word, count of occurrence> for the cleared resume
+	 * @return
+	 */
+	protected void split() {
+		StringTokenizer tk = new StringTokenizer(this.clearedResume, " ");
+		while (tk.hasMoreElements()) {
+			String s = tk.nextToken().toLowerCase();
+			if (map.get(s) == null) {
+				map.put(s, 1);
+			} else {
+				map.put(s, map.get(s) + 1);
+			}
 		}
 	}
 	
 	/**
-	 * Nicer display of a episode
+	 * Get the HashMap<word, number of occurrence> for the cleared resume
+	 * @return
+	 */
+	public HashMap<String, Integer> getMap() {
+		return map;
+	}
+	
+	/**
+	 * Get the similitude (0-1) between two episodes
+	 * @param e
+	 * @return
+	 */
+	public double getSimilitude(Episode e) {
+		// On commence par faire une liste avec les mots communs
+		Set<String> both = new HashSet<String>();
+		both.addAll(map.keySet());
+		both.retainAll(e.getMap().keySet());
+		
+		// On peut ensuite calculer la similite avec la jolie formule (merci @gforestier !)
+		double sclar = 0, norm1 = 0, norm2 = 0;
+		for (String k : both)
+			sclar += map.get(k) * e.getMap().get(k);
+		for (String k : map.keySet())
+			norm1 += map.get(k) * map.get(k);
+		for (String k : e.getMap().keySet())
+			norm2 += e.getMap().get(k) * e.getMap().get(k);
+		
+		return sclar / Math.sqrt(norm1 * norm2);
+	}
+	
+	/**
+	 * Nicer display of an episode
 	 */
 	public String toString() {
 		return "\n" + "S" + season + "E" + number + "\n" + "title: " + title + "\n" + "resume: " + resume;
