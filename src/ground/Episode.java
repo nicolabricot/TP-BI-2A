@@ -132,7 +132,7 @@ public class Episode {
 	}
 	
 	/**
-	 * Get the similitude (0-1) between two episodes
+	 * Get the similitude (0-1) between the current episode and an ohter
 	 * @param e
 	 * @return
 	 */
