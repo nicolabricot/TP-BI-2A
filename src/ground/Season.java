@@ -70,5 +70,9 @@ public class Season {
 	public ArrayList<Episode> getEpisodes() {
 		return data;
 	}
+	
+	public Episode getEpisode(int index) {
+		return data.get(index);
+	}
 
 }
