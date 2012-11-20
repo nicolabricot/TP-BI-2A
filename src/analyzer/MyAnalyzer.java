@@ -48,8 +48,6 @@ public class MyAnalyzer extends Analyzer {
 			newSummary.append(ta.toString()+" ");
 			hasnext = ts.incrementToken();
 		}
-		//System.out.println(summary);
-		//System.out.println(newSummary);
 		return newSummary.toString();
 
 	}
