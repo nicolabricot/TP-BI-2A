@@ -12,26 +12,43 @@ public class Season {
 	protected String url;
 	protected BufferedReader html;
 	protected ArrayList<Episode> data = new ArrayList<Episode>();
+	protected int season = 0;
 	
-	
-	public Season(String url) throws IOException {
+	/**
+	 * Default constructor
+	 * @param url
+	 * @throws Exception 
+	 */
+	public Season(String url) throws Exception {
 		this.url = url;
 		treatment();
 	}
 	
+	/**
+	 * Constructor by copy
+	 * @param season
+	 */
 	public Season(Season season) {
-		for (int i=0; i<season.getEpisodes().size(); i++) {
+		for (int i=0; i<season.getEpisodes().size(); i++)
 			data.add(new Episode(season.getEpisodes().get(i)));
-		}
+		this.season = season.getSeason();
 	}
 	
+	/**
+	 * Get html from the website
+	 * @throws IOException
+	 */
 	protected void initialize() throws IOException {
 		URL oracle = new URL(url);
 		URLConnection yc = oracle.openConnection();
 		html = new BufferedReader(new InputStreamReader(yc.getInputStream()));
 	}
 	
-	protected void analyse() throws IOException {
+	/**
+	 * Get resume and title foreach episode
+	 * @throws Exception 
+	 */
+	protected void analyse() throws Exception {
 		String inputLine;
 		int season;
 		int episode = 1;
@@ -55,17 +72,24 @@ public class Season {
 		}
 	}
 	
-	protected void treatment() throws IOException {
+	/**
+	 * Process to get connection and resumes
+	 * @throws Exception 
+	 */
+	protected void treatment() throws Exception {
 		this.initialize();
 		this.analyse();
 		//System.out.println(data);
+		this.season = data.get(0).getSeason();
 	}
 	
+	/*
 	protected void printHTML(BufferedReader input) throws IOException {
 		String inputLine;
 		while ((inputLine = input.readLine()) != null)
 			System.out.println(inputLine);
 	}
+	*/
 	
 	/**
 	 * Get list of Episodes in this Season
@@ -82,5 +106,22 @@ public class Season {
 	public Episode getEpisode(int index) {
 		return data.get(index-1);
 	}
-
+	
+	/**
+	 * Return the number of the current season
+	 * @return
+	 */
+	public int getSeason() {
+		return this.season;
+	}
+	
+	/**
+	 * Nicer display of a season
+	 */
+	public String toString() {
+		String tmp = "----------\n" + "Season: " + this.season + "\n----------";
+		for (int i=0; i<data.size(); i++)
+			tmp += "\nE" + (i+1) + ": " + data.get(i).getTitle() + "\nresume: " + data.get(i).getResume() + "\ncleared: " + data.get(i).getClearedResume() ;
+		return tmp;
+	}
 }
