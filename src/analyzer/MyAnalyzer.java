@@ -22,7 +22,8 @@ public class MyAnalyzer extends Analyzer {
 		String[] abc = { "when", "while", "who", "thi", "up", "have",
 				"don", "ha", "hi", "him", "so", "out", "an", "that", "is",
 				"in", "the", "he", "she", "her", "s", "i", "m", "t",
-				"after", "from", "all", "can", "do", "which", "doesn", "go" };
+				"after", "from", "all", "can", "do", "which", "doesn", "go",
+				"to", "a"};
 		stopWords = new HashSet<String>(Arrays.asList(abc));
 	}
 
