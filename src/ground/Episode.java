@@ -27,6 +27,7 @@ public class Episode {
 		this.title = e.getTitle();
 		this.resume = e.getResume();
 		this.clearedResume = e.getClearedResume();
+		this.map = e.getMap();
 	}
 	
 	/**
