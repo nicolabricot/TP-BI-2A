@@ -5,7 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class Season {
 	
@@ -13,6 +17,7 @@ public class Season {
 	protected BufferedReader html;
 	protected ArrayList<Episode> data = new ArrayList<Episode>();
 	protected int season = 0;
+	protected String name;
 	
 	/**
 	 * Default constructor
@@ -53,6 +58,9 @@ public class Season {
 		int season;
 		int episode = 1;
 		while ((inputLine = html.readLine()) != null) {
+			if (inputLine.contains("<meta itemprop=\"name\" content=\"")) {
+				this.name = inputLine.replace("    <meta itemprop=\"name\" content=\"", "").replace("\"/>", "");
+			}
 			if (inputLine.contains("episode_top")) {
 				inputLine = inputLine.replace("</h3>", "").substring(inputLine.indexOf(";")+1);
 				season = Integer.parseInt(inputLine);
@@ -115,6 +123,10 @@ public class Season {
 		return this.season;
 	}
 	
+	public String getName() {
+		return this.name;
+	}
+	
 	/**
 	 * Get similitude between two episodes
 	 * @param e1
@@ -126,19 +138,43 @@ public class Season {
 	}
 	
 	
-	public void similitude(Episode e) {
-		System.out.println("Similitude with E" + e.getNumber() + " Ò" + e.getTitle() + "Ó:");
+	public List<Couple> similitude(Episode e) {
+		List<Couple> list = new ArrayList<Couple>();
 		for (int index=0; index<data.size(); index++)
-			System.out.println((index+1) + ": " + e.getSimilitude(data.get(index)));
+			list.add(new Couple(index+1, e.getSimilitude(data.get(index))*100));
+		
+		Collections.sort(list, new Comparator<Couple>() {
+			public int compare(Couple arg0, Couple arg1) {
+				return -Double.compare(arg0.similitude, arg1.similitude);
+			}});
+		
+		//list.remove(0);
+		return list;
+	}
+	
+	public void displaySimilitude(Episode e) {
+		System.out.println("\nSimilitude with episode " + e.getNumber() + " Ò" + e.getTitle() + "Ó:\n");
+		DecimalFormat f = new DecimalFormat("#0.00");
+		List<Couple> list = new ArrayList<Couple>();
+		list = similitude(e);
+		int x = 0;
+		for (Couple c: list) {
+			System.out.print("E" + String.format("%02d", c.number) + ": [");
+			x = (int) Math.floor((c.similitude/10) + 0.5d);
+			for (int i=0; i<x; i++) System.out.print("-");
+			for (int i=x; i<10; i++) System.out.print(" ");
+			System.out.println("] (" + f.format(c.similitude) + "%)" );
+		}
 	}
 	
 	/**
 	 * Nicer display of a season
 	 */
 	public String toString() {
-		String tmp = "----------\n" + "Season: " + this.season + "\n----------";
+		String tmp = "#=============================\n" + name + " (season " + this.season + ")\n=============================#";
 		for (int i=0; i<data.size(); i++)
-			tmp += "\nE" + (i+1) + ": " + data.get(i).getTitle() + "\nresume: " + data.get(i).getResume() + "\ncleared: " + data.get(i).getClearedResume() ;
+			//tmp += "\n--\nE" + (i+1) + " " + data.get(i).getTitle() + "\nresume: " + data.get(i).getResume() + "\ncleared: " + data.get(i).getClearedResume() ;
+			tmp += "\nE" + (i+1) + ": " + data.get(i).getTitle() + "\nÒ" + data.get(i).getResume() + "Ó\n---" ;
 		return tmp;
 	}
 }
